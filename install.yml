@@ -1,0 +1,19 @@
+---
+- hosts: all
+  vars:
+    dest_dir: "/tmp"
+  tasks:
+    - name: Install Clojure
+      get_url: url=https://repo1.maven.org/maven2/org/clojure/clojure/1.7.0-beta3/clojure-1.7.0-beta3.jar dest="{{dest_dir}}/clojure-1.7.0-beta3.jar"
+
+    - name: Install java.jmx
+      get_url: url=https://repo1.maven.org/maven2/org/clojure/java.jmx/0.3.1/java.jmx-0.3.1.jar dest="{{dest_dir}}/java.jmx-0.3.1.jar"
+
+    - name: Install tools.cli
+      get_url: url=https://repo1.maven.org/maven2/org/clojure/tools.cli/0.3.1/tools.cli-0.3.1.jar dest="{{dest_dir}}/tools.cli-0.3.1.jar"
+
+    - name: Install JMX Clojure script
+      copy: src=jmx-client.clj dest="{{dest_dir}}/jmx-client.clj"
+
+    - name: Install runner script
+      template: src=jmx-client.sh dest="{{dest_dir}}/jmx-client.sh" mode=0755
