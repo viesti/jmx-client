@@ -12,7 +12,8 @@
    ["-f" "--filter FILTER" "ObjectName filter"
     :default "*:*"]
    ["-k" "--key KEY" "Text to prepend to output, e.g. 'hostname.'"
-    :default ""]])
+    :default ""]
+   ["-H" "--help"]])
 
 (defn sanitize [object-name]
   (-> (.getKeyProperty object-name "name")
@@ -37,10 +38,13 @@
         (catch Exception e)))))
 
 (defn main [args]
-  (let [{:keys [errors options]} (parse-opts args cli-options)]
+  (let [{:keys [errors options summary] :as opts} (parse-opts args cli-options)]
     (when errors
       (println (string/join \newline errors))
       (System/exit 1))
+    (when (:help options)
+      (println summary)
+      (System/exit 0))
     (jmx/with-connection (select-keys options [:host :port])
       (print-attributes (:filter options) (:key options)))))
 
